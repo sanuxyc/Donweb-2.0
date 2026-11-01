@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TuProximaPC</title>
+<style>
+body{margin:0;background:#141a24;color:#eef2f7;font-family:Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:30px 15px}
+.top{overflow:hidden;margin-bottom:25px}
+.logo{float:left;font-size:22px;font-weight:bold;cursor:pointer}
+.logo span,.verde{color:#3ee0a8}
+.carr{float:right}
+.card{background:#1f2633;border:1px solid #333d4d;border-radius:14px;padding:20px;margin:10px 0}
+.btn{background:#3ee0a8;color:#141a24;border:0;border-radius:10px;padding:12px 22px;font-weight:bold;font-size:15px;cursor:pointer;margin:5px}
+.btn2{background:#2a3242;color:#eef2f7;border:1px solid #333d4d;border-radius:10px;padding:12px 22px;font-weight:bold;font-size:15px;cursor:pointer;margin:5px}
+.btn[disabled]{opacity:.4}
+input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #333d4d;background:#141a24;color:#eef2f7;font-size:15px}
+.c{text-align:center}
+.grid{overflow:hidden}
+.col{float:left;width:31%;margin:1%;box-sizing:border-box;cursor:pointer}
+.sel{border-color:#3ee0a8}
+h1{font-size:56px;margin:10px 0}
+.gris{color:#a3adbd;font-size:14px}
+.fila{overflow:hidden;border-bottom:1px solid #333d4d;padding:8px 0}
+.der{float:right}
+.chat{height:260px;overflow-y:auto}
+.msg{background:#2a3242;padding:10px;border-radius:10px;margin:6px 0;max-width:80%}
+.yo{background:#3ee0a8;color:#141a24;margin-left:auto}
+.oculto{display:none}
+.hora{display:inline-block;padding:8px 12px;margin:3px;border:1px solid #333d4d;border-radius:8px;cursor:pointer}
+.hora.on{background:#3ee0a8;color:#141a24}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo" onclick="ir('welcome')">Tu<span>Proxima</span>PC</div>
+    <button class="btn2 carr" id="btnCarr" onclick="ir('carrito')">Carrito (0) US$0</button>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+var nombre="",apellido="",marca="intel",carrito=[],volver="menu",paso="welcome",msgs=[],fecha="",hora="";
+var PARTES={
+ intel:{"Procesador":[["Intel Core i5-14400F","10 nucleos, 4.7 GHz",210],["Intel Core i7-14700K","20 nucleos, 5.6 GHz",410],["Intel Core i9-14900K","24 nucleos, 6.0 GHz",580]],
+        "Motherboard":[["MSI B760 Gaming Plus","LGA1700, DDR5",160],["ASUS ROG Z790-F","LGA1700, DDR5, WiFi 6E",380]]},
+ amd:{"Procesador":[["AMD Ryzen 5 7600","6 nucleos, 5.1 GHz",200],["AMD Ryzen 7 7800X3D","8 nucleos, 3D V-Cache",390],["AMD Ryzen 9 7950X","16 nucleos, 5.7 GHz",550]],
+      "Motherboard":[["Gigabyte B650 Aorus Elite","AM5, DDR5",180],["ASUS ROG X670E-E","AM5, DDR5, PCIe 5.0",450]]}
+};
+var COMUN={"Memoria RAM":[["Kingston Fury 16GB","DDR5 5600MHz",60],["Corsair Vengeance 32GB","DDR5 6000MHz",115]],
+ "Placa de video":[["NVIDIA RTX 4060","8GB GDDR6",300],["AMD RX 7800 XT","16GB GDDR6",500],["NVIDIA RTX 4080 Super","16GB GDDR6X",1000]],
+ "Almacenamiento":[["Samsung 980 1TB","NVMe 3500 MB/s",75],["WD Black SN850X 2TB","NVMe 7300 MB/s",150]],
+ "Fuente":[["Corsair CX650","650W 80+ Bronze",70],["Corsair RM850x","850W 80+ Gold",130]]};
+var COMBOS=[["Oficina / Estudio","intel",[0,0,0,0,0,0]],["Gamer","amd",[1,0,1,1,0,1]],["Profesional / Streaming","intel",[2,1,1,2,1,1]]];
+
+function catalogo(m){var r={},k;for(k in PARTES[m])r[k]=PARTES[m][k];for(k in COMUN)r[k]=COMUN[k];return r;}
+function total(){var t=0;for(var i=0;i<carrito.length;i++)t+=carrito[i].p;return t;}
+function $(id){return document.getElementById(id);}
+function ir(p){paso=p;dibujar();}
+function consultas(desde){volver=desde;ir('consultas');}
+function agregar(cat,i){
+  var it=catalogo(marca)[cat][i],n=[];
+  for(var j=0;j<carrito.length;j++)if(carrito[j].c!=cat)n.push(carrito[j]);
+  n.push({c:cat,n:it[0],p:it[2]});carrito=n;dibujar();
+}
+function combo(i){
+  var q=COMBOS[i],cat=catalogo(q[1]),k=0,c;marca=q[1];carrito=[];
+  for(c in cat){var l=cat[c];var it=l[Math.min(q[2][k],l.length-1)];carrito.push({c:c,n:it[0],p:it[2]});k++;}
+  ir('carrito');
+}
+function quitar(i){carrito.splice(i,1);dibujar();}
+function respuesta(q){
+  var t=q.toLowerCase();
+  if(t.indexOf("gam")>=0||t.indexOf("jug")>=0)return "Para gaming: Ryzen 7 7800X3D + RX 7800 XT + 32GB. Proba el combo Gamer.";
+  if(t.indexOf("barat")>=0||t.indexOf("ofic")>=0)return "Lo mas economico: combo Oficina con i5-14400F y 16GB.";
+  if(t.indexOf("rapid")>=0||t.indexOf("apur")>=0)return "En Armar tu PC usa Compra rapida: un clic y va al carrito.";
+  if(t.indexOf("stream")>=0||t.indexOf("edit")>=0)return "Para streaming/edicion: i9-14900K + RTX 4080 Super. Combo Profesional.";
+  return "Contame para que vas a usar la PC (juegos, oficina, edicion) y te recomiendo la ideal.";
+}
+function enviar(){
+  var q=$('q').value;if(!q)return;
+  msgs.push([1,q]);msgs.push([0,respuesta(q)]);dibujar();
+}
+function dibujar(){
+  var h="",i,k;
+  $('btnCarr').className=paso=="welcome"?"btn2 carr oculto":"btn2 carr";
+  $('btnCarr').innerHTML="Carrito ("+carrito.length+") US$"+total();
+  if(paso=="welcome"){
+    h='<div class="c"><h1>&iexcl;Bienvenido!</h1><p class="verde" style="font-size:24px">Tu proxima PC te esta esperando</p>'+
+    '<div class="card" style="max-width:400px;margin:20px auto;text-align:left"><input id="nom" placeholder="Nombre" value="'+nombre+'"><input id="ape" placeholder="Apellido" value="'+apellido+'">'+
+    '<button class="btn" style="width:100%" onclick="nombre=$(\'nom\').value;apellido=$(\'ape\').value;if(nombre&&apellido)ir(\'menu\');else alert(\'Completa nombre y apellido\')">Continuar</button></div>'+
+    '<div class="grid"><div class="card col"><b>Potencia real</b><p class="gris">Procesadores de ultima generacion para jugar, crear y trabajar.</p></div>'+
+    '<div class="card col"><b>Graficos increibles</b><p class="gris">Placas de video que hacen brillar cada juego.</p></div>'+
+    '<div class="card col"><b>A tu medida</b><p class="gris">Elegi cada pieza o deja que te armemos la ideal.</p></div></div></div>';
+  }else if(paso=="menu"){
+    h='<div class="c"><h2>Hola '+nombre+' '+apellido+', &iquest;que queres hacer?</h2><button class="btn2" onclick="consultas(\'menu\')">Consultas</button><button class="btn" onclick="ir(\'armar\')">Armar tu PC</button></div>';
+  }else if(paso=="consultas"){
+    h='<div class="c"><h2>Consultas</h2><button class="btn" onclick="fecha=\'\';hora=\'\';ir(\'persona\')">Hablar con una persona</button><button class="btn" onclick="msgs=[[0,\'Hola '+nombre+', soy el asistente IA. En que te ayudo?\']];ir(\'ia\')">Hablar con IA</button><br><br><button class="btn2" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="persona"){
+    var hs=["10:00","11:00","12:00","14:00","15:00","16:00","17:00"];
+    h='<div class="card" style="max-width:420px;margin:auto"><h2>Agenda tu turno</h2><input id="fe" type="date" value="'+fecha+'" onchange="fecha=this.value">';
+    for(i=0;i<hs.length;i++)h+='<span class="hora'+(hora==hs[i]?' on':'')+'" onclick="fecha=$(\'fe\').value;hora=\''+hs[i]+'\';dibujar()">'+hs[i]+'</span>';
+    h+='<br><br><button class="btn2" onclick="ir(volver)">Volver</button><button class="btn" onclick="fecha=$(\'fe\').value;if(fecha&&hora)ir(\'turnook\');else alert(\'Elegi fecha y horario\')">Confirmar</button></div>';
+  }else if(paso=="turnook"){
+    h='<div class="card c" style="max-width:420px;margin:auto"><h2 class="verde">&iexcl;Turno agendado!</h2><p>'+nombre+', te esperamos el '+fecha+' a las '+hora+'.</p><button class="btn" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="ia"){
+    h='<div class="card" style="max-width:500px;margin:auto"><h2>Asistente IA</h2><div class="chat" id="chat">';
+    for(i=0;i<msgs.length;i++)h+='<div class="msg'+(msgs[i][0]?' yo':'')+'">'+msgs[i][1]+'</div>';
+    h+='</div><input id="q" placeholder="Escribi tu consulta..." onkeydown="if(event.keyCode==13)enviar()"><button class="btn" onclick="enviar()">Enviar</button><button class="btn2" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="armar"){
+    h='<div class="card"><b>&iquest;Apurado? Compra rapida, elegi un combo listo:</b><br>';
+    for(i=0;i<COMBOS.length;i++)h+='<button class="btn" onclick="combo('+i+')">'+COMBOS[i][0]+' ('+COMBOS[i][1].toUpperCase()+')</button>';
+    h+='</div><button class="'+(marca=="intel"?"btn":"btn2")+'" onclick="marca=\'intel\';dibujar()">Intel</button><button class="'+(marca=="amd"?"btn":"btn2")+'" onclick="marca=\'amd\';dibujar()">AMD</button>';
+    var cat=catalogo(marca);
+    for(k in cat){
+      h+='<h3>'+k+'</h3><div class="grid">';
+      for(i=0;i<cat[k].length;i++){
+        var it=cat[k][i],s=false;
+        for(var j=0;j<carrito.length;j++)if(carrito[j].n==it[0])s=true;
+        h+='<div class="card col'+(s?' sel':'')+'" onclick="agregar(\''+k+'\','+i+')"><b>'+it[0]+'</b><div class="gris">'+it[1]+'</div><b class="verde">US$'+it[2]+(s?' &#10003;':'')+'</b></div>';
+      }
+      h+='</div>';
+    }
+    h+='<button class="btn" onclick="ir(\'carrito\')">Ver carrito</button>';
+  }else if(paso=="carrito"){
+    h='<h2>Tu carrito</h2>';
+    if(!carrito.length)h+='<p class="gris">Todavia no agregaste nada.</p>';
+    else{h+='<div class="card">';for(i=0;i<carrito.length;i++)h+='<div class="fila"><span class="gris">'+carrito[i].c+':</span> '+carrito[i].n+'<span class="der">US$'+carrito[i].p+' <a href="#" style="color:#ff6b6b" onclick="quitar('+i+');return false">X</a></span></div>';
+      h+='<h3 style="text-align:right">Total: US$'+total()+'</h3></div>';}
+    h+='<button class="btn2" onclick="ir(\'armar\')">Seguir armando</button><button class="btn" onclick="if(carrito.length)ir(\'post\')">Continuar</button>';
+  }else if(paso=="post"){
+    h='<div class="c"><h2>&iquest;Como seguimos?</h2><button class="btn2" onclick="consultas(\'post\')">Consultar con persona o IA</button><button class="btn2" onclick="ir(\'armar\')">Volver a armar tu PC</button><button class="btn" onclick="ir(\'pago\')">Continuar el pago</button></div>';
+  }else if(paso=="pago"){
+    h='<div class="card" style="max-width:420px;margin:auto"><h2>Pago - US$'+total()+'</h2><input placeholder="Numero de tarjeta"><input placeholder="MM/AA"><input placeholder="CVV"><button class="btn" style="width:100%" onclick="ir(\'listo\')">Pagar</button></div>';
+  }else if(paso=="listo"){
+    h='<div class="c"><h1 class="verde">&iexcl;Gracias '+nombre+'!</h1><p>Tu pedido de US$'+total()+' fue confirmado.</p><button class="btn" onclick="carrito=[];ir(\'menu\')">Volver al inicio</button></div>';
+  }
+  $('app').innerHTML=h;
+  if($('chat'))$('chat').scrollTop=99999;
+  if($('q'))$('q').focus();
+}
+dibujar();
+</script>
+</body>
+</html>

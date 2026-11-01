@@ -1,0 +1,68 @@
+*{box-sizing:border-box}
+body{margin:0;background:#141a24;background-image:radial-gradient(circle at 20% 0%,#1d2a3d 0,#141a24 55%);background-attachment:fixed;color:#eef2f7;font-family:Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:30px 15px}
+.top{overflow:hidden;margin-bottom:25px}
+.logo{float:left;font-size:28px;font-weight:bold;cursor:pointer;padding-top:8px}
+.logo span,.verde{color:#3ee0a8}
+.carr{float:right}
+
+/* TARJETAS */
+.card{background:#1f2633;border:1px solid #333d4d;border-radius:16px;padding:20px;margin:10px 0;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+
+/* BOTONES GRANDES */
+.btn,.btn2{border-radius:14px;padding:20px 40px;font-weight:bold;font-size:20px;cursor:pointer;margin:8px;min-width:220px;transition:transform .15s,box-shadow .15s,filter .15s}
+.btn{background:#3ee0a8;color:#141a24;border:0;box-shadow:0 6px 18px rgba(62,224,168,.25)}
+.btn2{background:#2a3242;color:#eef2f7;border:1px solid #333d4d}
+.btn:hover,.btn2:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:active,.btn2:active{transform:translateY(0)}
+.btn[disabled]{opacity:.4}
+.carr{padding:14px 24px;font-size:17px;min-width:0;margin:0}
+
+/* INPUTS */
+input{width:100%;padding:16px;margin:8px 0;border-radius:10px;border:1px solid #333d4d;background:#141a24;color:#eef2f7;font-size:17px}
+input:focus{outline:2px solid #3ee0a8;border-color:#3ee0a8}
+input[type=checkbox]{width:24px;height:24px;margin:0;flex-shrink:0;accent-color:#3ee0a8}
+
+.c{text-align:center}
+h1{font-size:60px;margin:10px 0}
+.gris{color:#a3adbd;font-size:14px}
+.fila{overflow:hidden;border-bottom:1px solid #333d4d;padding:10px 0;font-size:16px}
+.der{float:right}
+.chat{height:280px;overflow-y:auto}
+.msg{background:#2a3242;padding:12px;border-radius:12px;margin:6px 0;max-width:80%}
+.yo{background:#3ee0a8;color:#141a24;margin-left:auto}
+.oculto{display:none}
+
+/* GRILLA DE PRODUCTOS */
+.grid{overflow:hidden}
+.col{float:left;width:31%;margin:1%;cursor:pointer;transition:transform .15s,border-color .15s}
+.col:hover{transform:translateY(-4px);border-color:#3ee0a8}
+.sel{border-color:#3ee0a8;box-shadow:0 0 0 2px #3ee0a8}
+
+/* IMAGENES */
+.pic,.hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a3242,#141a24)}
+.pic{height:130px;border-radius:12px;margin-bottom:12px;font-size:60px}
+.hero{height:240px;border-radius:20px;margin:25px 0;font-size:110px;border:1px solid #333d4d}
+.pic img,.hero img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+
+/* HORARIOS */
+.hora{display:inline-block;padding:12px 18px;margin:4px;border:1px solid #333d4d;border-radius:10px;cursor:pointer;font-size:16px}
+.hora.on{background:#3ee0a8;color:#141a24;font-weight:bold}
+
+/* TERMINOS Y CONDICIONES */
+.terms{display:flex;gap:12px;align-items:center;margin:14px 0;font-size:15px;color:#a3adbd;cursor:pointer}
+.terms a,.pie a{color:#3ee0a8}
+.pie{text-align:center;color:#a3adbd;font-size:13px;margin-top:50px;padding-bottom:20px}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:99;padding:15px}
+.modal.oculto{display:none}
+.modal .box{background:#1f2633;max-width:680px;max-height:85vh;overflow-y:auto;border-radius:18px;padding:28px;border:1px solid #333d4d;font-size:15px;line-height:1.55}
+.modal .box h3{color:#3ee0a8;margin:18px 0 4px}
+
+/* CELULAR */
+@media(max-width:700px){
+ .col{float:none;width:100%;margin:8px 0}
+ h1{font-size:38px}
+ .btn,.btn2{width:100%;margin:6px 0}
+ .carr{width:auto}
+ .hero{height:160px;font-size:70px}
+}

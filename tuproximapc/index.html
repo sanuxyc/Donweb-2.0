@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TuProximaPC</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#141a24;background-image:radial-gradient(circle at 20% 0%,#1d2a3d 0,#141a24 55%);background-attachment:fixed;color:#eef2f7;font-family:Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:30px 15px}
+.top{overflow:hidden;margin-bottom:25px}
+.logo{float:left;font-size:28px;font-weight:bold;cursor:pointer;padding-top:8px}
+.logo span,.verde{color:#3ee0a8}
+.carr{float:right}
+.card{background:#1f2633;border:1px solid #333d4d;border-radius:16px;padding:20px;margin:10px 0;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.btn,.btn2{border-radius:14px;padding:20px 40px;font-weight:bold;font-size:20px;cursor:pointer;margin:8px;min-width:220px;transition:transform .15s,box-shadow .15s,filter .15s}
+.btn{background:#3ee0a8;color:#141a24;border:0;box-shadow:0 6px 18px rgba(62,224,168,.25)}
+.btn2{background:#2a3242;color:#eef2f7;border:1px solid #333d4d}
+.btn:hover,.btn2:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn:active,.btn2:active{transform:translateY(0)}
+.btn[disabled]{opacity:.4}
+.carr{padding:14px 24px;font-size:17px;min-width:0;margin:0}
+input{width:100%;padding:16px;margin:8px 0;border-radius:10px;border:1px solid #333d4d;background:#141a24;color:#eef2f7;font-size:17px}
+input:focus{outline:2px solid #3ee0a8;border-color:#3ee0a8}
+input[type=checkbox]{width:24px;height:24px;margin:0;flex-shrink:0;accent-color:#3ee0a8}
+.c{text-align:center}
+h1{font-size:60px;margin:10px 0}
+.gris{color:#a3adbd;font-size:14px}
+.fila{overflow:hidden;border-bottom:1px solid #333d4d;padding:10px 0;font-size:16px}
+.der{float:right}
+.chat{height:280px;overflow-y:auto}
+.msg{background:#2a3242;padding:12px;border-radius:12px;margin:6px 0;max-width:80%}
+.yo{background:#3ee0a8;color:#141a24;margin-left:auto}
+.oculto{display:none}
+.grid{overflow:hidden}
+.col{float:left;width:31%;margin:1%;cursor:pointer;transition:transform .15s,border-color .15s}
+.col:hover{transform:translateY(-4px);border-color:#3ee0a8}
+.sel{border-color:#3ee0a8;box-shadow:0 0 0 2px #3ee0a8}
+.pic,.hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a3242,#141a24)}
+.pic{height:130px;border-radius:12px;margin-bottom:12px;font-size:60px}
+.hero{height:240px;border-radius:20px;margin:25px 0;font-size:110px;border:1px solid #333d4d}
+.pic img,.hero img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.hora{display:inline-block;padding:12px 18px;margin:4px;border:1px solid #333d4d;border-radius:10px;cursor:pointer;font-size:16px}
+.hora.on{background:#3ee0a8;color:#141a24;font-weight:bold}
+.terms{display:flex;gap:12px;align-items:center;margin:14px 0;font-size:15px;color:#a3adbd;cursor:pointer}
+.terms a,.pie a{color:#3ee0a8}
+.pie{text-align:center;color:#a3adbd;font-size:13px;margin-top:50px;padding-bottom:20px}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:99;padding:15px}
+.modal.oculto{display:none}
+.modal .box{background:#1f2633;max-width:680px;max-height:85vh;overflow-y:auto;border-radius:18px;padding:28px;border:1px solid #333d4d;font-size:15px;line-height:1.55}
+.modal .box h3{color:#3ee0a8;margin:18px 0 4px}
+@media(max-width:700px){
+ .col{float:none;width:100%;margin:8px 0}
+ h1{font-size:38px}
+ .btn,.btn2{width:100%;margin:6px 0}
+ .carr{width:auto}
+ .hero{height:160px;font-size:70px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo" onclick="ir('welcome')">Tu<span>Proxima</span>PC</div>
+    <button class="btn2 carr" id="btnCarr" onclick="ir('carrito')">Carrito (0) US$0</button>
+  </div>
+  <div id="app"></div>
+  <div class="pie">&copy; 2026 TuProximaPC. Todos los derechos reservados. <a href="#" onclick="verTyC();return false">T&eacute;rminos y condiciones</a></div>
+</div>
+
+<div class="modal oculto" id="tyc"><div class="box">
+<h2>T&eacute;rminos y Condiciones</h2>
+<h3>1. Propiedad intelectual</h3>
+<p>El dise&ntilde;o, c&oacute;digo fuente, textos, logotipos, im&aacute;genes y la estructura de TuProximaPC son propiedad exclusiva de sus titulares y est&aacute;n protegidos por la Ley 11.723 de Propiedad Intelectual y normas concordantes.</p>
+<h3>2. Prohibiciones</h3>
+<p>Queda prohibido, sin autorizaci&oacute;n escrita previa: copiar, descargar, reproducir, modificar, distribuir o publicar total o parcialmente este sitio; realizar scraping, ingenier&iacute;a inversa o clonaci&oacute;n del sitio o su c&oacute;digo; y utilizar el sitio, su dise&ntilde;o o su marca con fines comerciales propios.</p>
+<h3>3. Uso del sitio</h3>
+<p>El usuario se compromete a utilizar el sitio de forma l&iacute;cita y a brindar datos verdaderos. Nos reservamos el derecho de bloquear el acceso ante usos indebidos.</p>
+<h3>4. Precios y pedidos</h3>
+<p>Los precios est&aacute;n expresados en d&oacute;lares (US$) y pueden cambiar sin previo aviso. La disponibilidad de componentes est&aacute; sujeta a stock.</p>
+<h3>5. Datos personales</h3>
+<p>Los datos ingresados se usan &uacute;nicamente para gestionar turnos, consultas y pedidos, conforme a la Ley 25.326 de Protecci&oacute;n de Datos Personales.</p>
+<h3>6. Acciones legales</h3>
+<p>El incumplimiento de estos t&eacute;rminos habilita a iniciar las acciones civiles y penales correspondientes.</p>
+<button class="btn" style="width:100%" onclick="$('tyc').className='modal oculto'">Cerrar</button>
+</div></div>
+
+<script>
+var nombre="",apellido="",marca="intel",carrito=[],volver="menu",paso="welcome",msgs=[],fecha="",hora="";
+var ICO={"Procesador":"🧠","Motherboard":"🔌","Memoria RAM":"💾","Placa de video":"🎮","Almacenamiento":"💽","Fuente":"⚡"};
+var IMG={"Procesador":"cpu","Motherboard":"motherboard","Memoria RAM":"ram","Placa de video":"gpu","Almacenamiento":"ssd","Fuente":"fuente"};
+var PARTES={
+ intel:{"Procesador":[["Intel Core i5-14400F","10 nucleos, 4.7 GHz",210],["Intel Core i7-14700K","20 nucleos, 5.6 GHz",410],["Intel Core i9-14900K","24 nucleos, 6.0 GHz",580]],
+        "Motherboard":[["MSI B760 Gaming Plus","LGA1700, DDR5",160],["ASUS ROG Z790-F","LGA1700, DDR5, WiFi 6E",380]]},
+ amd:{"Procesador":[["AMD Ryzen 5 7600","6 nucleos, 5.1 GHz",200],["AMD Ryzen 7 7800X3D","8 nucleos, 3D V-Cache",390],["AMD Ryzen 9 7950X","16 nucleos, 5.7 GHz",550]],
+      "Motherboard":[["Gigabyte B650 Aorus Elite","AM5, DDR5",180],["ASUS ROG X670E-E","AM5, DDR5, PCIe 5.0",450]]}
+};
+var COMUN={"Memoria RAM":[["Kingston Fury 16GB","DDR5 5600MHz",60],["Corsair Vengeance 32GB","DDR5 6000MHz",115]],
+ "Placa de video":[["NVIDIA RTX 4060","8GB GDDR6",300],["AMD RX 7800 XT","16GB GDDR6",500],["NVIDIA RTX 4080 Super","16GB GDDR6X",1000]],
+ "Almacenamiento":[["Samsung 980 1TB","NVMe 3500 MB/s",75],["WD Black SN850X 2TB","NVMe 7300 MB/s",150]],
+ "Fuente":[["Corsair CX650","650W 80+ Bronze",70],["Corsair RM850x","850W 80+ Gold",130]]};
+var COMBOS=[["Oficina / Estudio","intel",[0,0,0,0,0,0]],["Gamer","amd",[1,0,1,1,0,1]],["Profesional / Streaming","intel",[2,1,1,2,1,1]]];
+
+function catalogo(m){var r={},k;for(k in PARTES[m])r[k]=PARTES[m][k];for(k in COMUN)r[k]=COMUN[k];return r;}
+function total(){var t=0;for(var i=0;i<carrito.length;i++)t+=carrito[i].p;return t;}
+function $(id){return document.getElementById(id);}
+function ir(p){paso=p;dibujar();}
+function verTyC(){$('tyc').className='modal';}
+function consultas(desde){volver=desde;ir('consultas');}
+function agregar(cat,i){
+  var it=catalogo(marca)[cat][i],n=[];
+  for(var j=0;j<carrito.length;j++)if(carrito[j].c!=cat)n.push(carrito[j]);
+  n.push({c:cat,n:it[0],p:it[2]});carrito=n;dibujar();
+}
+function combo(i){
+  var q=COMBOS[i],cat=catalogo(q[1]),k=0,c;marca=q[1];carrito=[];
+  for(c in cat){var l=cat[c];var it=l[Math.min(q[2][k],l.length-1)];carrito.push({c:c,n:it[0],p:it[2]});k++;}
+  ir('carrito');
+}
+function quitar(i){carrito.splice(i,1);dibujar();}
+function respuesta(q){
+  var t=q.toLowerCase();
+  if(t.indexOf("gam")>=0||t.indexOf("jug")>=0)return "Para gaming: Ryzen 7 7800X3D + RX 7800 XT + 32GB. Proba el combo Gamer.";
+  if(t.indexOf("barat")>=0||t.indexOf("ofic")>=0)return "Lo mas economico: combo Oficina con i5-14400F y 16GB.";
+  if(t.indexOf("rapid")>=0||t.indexOf("apur")>=0)return "En Armar tu PC usa Compra rapida: un clic y va al carrito.";
+  if(t.indexOf("stream")>=0||t.indexOf("edit")>=0)return "Para streaming/edicion: i9-14900K + RTX 4080 Super. Combo Profesional.";
+  return "Contame para que vas a usar la PC (juegos, oficina, edicion) y te recomiendo la ideal.";
+}
+function enviar(){
+  var q=$('q').value;if(!q)return;
+  msgs.push([1,q]);msgs.push([0,respuesta(q)]);dibujar();
+}
+function dibujar(){
+  var h="",i,k;
+  $('btnCarr').className=paso=="welcome"?"btn2 carr oculto":"btn2 carr";
+  $('btnCarr').innerHTML="Carrito ("+carrito.length+") US$"+total();
+  if(paso=="welcome"){
+    h='<div class="c"><h1>&iexcl;Bienvenido!</h1><p class="verde" style="font-size:24px">Tu proxima PC te esta esperando</p>'+
+    '<div class="hero"><img src="img/hero.svg" onerror="this.style.display=\'none\'"><span>🖥️</span></div>'+
+    '<div class="card" style="max-width:420px;margin:20px auto;text-align:left"><input id="nom" placeholder="Nombre" value="'+nombre+'"><input id="ape" placeholder="Apellido" value="'+apellido+'">'+
+    '<label class="terms"><input type="checkbox" id="acepto"><span>Acepto los <a href="#" onclick="verTyC();return false">t&eacute;rminos y condiciones</a></span></label>'+
+    '<button class="btn" style="width:100%;margin:8px 0" onclick="nombre=$(\'nom\').value;apellido=$(\'ape\').value;if(!nombre||!apellido)alert(\'Completa nombre y apellido\');else if(!$(\'acepto\').checked)alert(\'Debes aceptar los terminos y condiciones\');else ir(\'menu\')">Continuar</button></div>'+
+    '<div class="grid"><div class="card col"><b>Potencia real</b><p class="gris">Procesadores de ultima generacion para jugar, crear y trabajar.</p></div>'+
+    '<div class="card col"><b>Graficos increibles</b><p class="gris">Placas de video que hacen brillar cada juego.</p></div>'+
+    '<div class="card col"><b>A tu medida</b><p class="gris">Elegi cada pieza o deja que te armemos la ideal.</p></div></div></div>';
+  }else if(paso=="menu"){
+    h='<div class="c"><h2>Hola '+nombre+' '+apellido+', &iquest;que queres hacer?</h2><button class="btn2" onclick="consultas(\'menu\')">Consultas</button><button class="btn" onclick="ir(\'armar\')">Armar tu PC</button></div>';
+  }else if(paso=="consultas"){
+    h='<div class="c"><h2>Consultas</h2><button class="btn" onclick="fecha=\'\';hora=\'\';ir(\'persona\')">Hablar con una persona</button><button class="btn" onclick="msgs=[[0,\'Hola '+nombre+', soy el asistente IA. En que te ayudo?\']];ir(\'ia\')">Hablar con IA</button><br><br><button class="btn2" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="persona"){
+    var hs=["10:00","11:00","12:00","14:00","15:00","16:00","17:00"];
+    h='<div class="card" style="max-width:420px;margin:auto"><h2>Agenda tu turno</h2><input id="fe" type="date" value="'+fecha+'" onchange="fecha=this.value">';
+    for(i=0;i<hs.length;i++)h+='<span class="hora'+(hora==hs[i]?' on':'')+'" onclick="fecha=$(\'fe\').value;hora=\''+hs[i]+'\';dibujar()">'+hs[i]+'</span>';
+    h+='<br><br><button class="btn2" onclick="ir(volver)">Volver</button><button class="btn" onclick="fecha=$(\'fe\').value;if(fecha&&hora)ir(\'turnook\');else alert(\'Elegi fecha y horario\')">Confirmar</button></div>';
+  }else if(paso=="turnook"){
+    h='<div class="card c" style="max-width:420px;margin:auto"><h2 class="verde">&iexcl;Turno agendado!</h2><p>'+nombre+', te esperamos el '+fecha+' a las '+hora+'.</p><button class="btn" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="ia"){
+    h='<div class="card" style="max-width:500px;margin:auto"><h2>Asistente IA</h2><div class="chat" id="chat">';
+    for(i=0;i<msgs.length;i++)h+='<div class="msg'+(msgs[i][0]?' yo':'')+'">'+msgs[i][1]+'</div>';
+    h+='</div><input id="q" placeholder="Escribi tu consulta..." onkeydown="if(event.keyCode==13)enviar()"><button class="btn" onclick="enviar()">Enviar</button><button class="btn2" onclick="ir(volver)">Volver</button></div>';
+  }else if(paso=="armar"){
+    h='<div class="card"><b>&iquest;Apurado? Compra rapida, elegi un combo listo:</b><br>';
+    for(i=0;i<COMBOS.length;i++)h+='<button class="btn" onclick="combo('+i+')">'+COMBOS[i][0]+' ('+COMBOS[i][1].toUpperCase()+')</button>';
+    h+='</div><button class="'+(marca=="intel"?"btn":"btn2")+'" onclick="marca=\'intel\';dibujar()">Intel</button><button class="'+(marca=="amd"?"btn":"btn2")+'" onclick="marca=\'amd\';dibujar()">AMD</button>';
+    var cat=catalogo(marca);
+    for(k in cat){
+      h+='<h3>'+k+'</h3><div class="grid">';
+      for(i=0;i<cat[k].length;i++){
+        var it=cat[k][i],s=false;
+        for(var j=0;j<carrito.length;j++)if(carrito[j].n==it[0])s=true;
+        h+='<div class="card col'+(s?' sel':'')+'" onclick="agregar(\''+k+'\','+i+')"><div class="pic"><img src="img/'+IMG[k]+'.svg" onerror="this.style.display=\'none\'"><span>'+ICO[k]+'</span></div><b>'+it[0]+'</b><div class="gris">'+it[1]+'</div><b class="verde">US$'+it[2]+(s?' &#10003;':'')+'</b></div>';
+      }
+      h+='</div>';
+    }
+    h+='<button class="btn" onclick="ir(\'carrito\')">Ver carrito</button>';
+  }else if(paso=="carrito"){
+    h='<h2>Tu carrito</h2>';
+    if(!carrito.length)h+='<p class="gris">Todavia no agregaste nada.</p>';
+    else{h+='<div class="card">';for(i=0;i<carrito.length;i++)h+='<div class="fila"><span class="gris">'+carrito[i].c+':</span> '+carrito[i].n+'<span class="der">US$'+carrito[i].p+' <a href="#" style="color:#ff6b6b" onclick="quitar('+i+');return false">X</a></span></div>';
+      h+='<h3 style="text-align:right">Total: US$'+total()+'</h3></div>';}
+    h+='<button class="btn2" onclick="ir(\'armar\')">Seguir armando</button><button class="btn" onclick="if(carrito.length)ir(\'post\')">Continuar</button>';
+  }else if(paso=="post"){
+    h='<div class="c"><h2>&iquest;Como seguimos?</h2><button class="btn2" onclick="consultas(\'post\')">Consultar con persona o IA</button><button class="btn2" onclick="ir(\'armar\')">Volver a armar tu PC</button><button class="btn" onclick="ir(\'pago\')">Continuar el pago</button></div>';
+  }else if(paso=="pago"){
+    h='<div class="card" style="max-width:420px;margin:auto"><h2>Pago - US$'+total()+'</h2><input placeholder="Numero de tarjeta"><input placeholder="MM/AA"><input placeholder="CVV"><button class="btn" style="width:100%" onclick="ir(\'listo\')">Pagar</button></div>';
+  }else if(paso=="listo"){
+    h='<div class="c"><h1 class="verde">&iexcl;Gracias '+nombre+'!</h1><p>Tu pedido de US$'+total()+' fue confirmado.</p><button class="btn" onclick="carrito=[];ir(\'menu\')">Volver al inicio</button></div>';
+  }
+  $('app').innerHTML=h;
+  if($('chat'))$('chat').scrollTop=99999;
+  if($('q'))$('q').focus();
+}
+dibujar();
+</script>
+</body>
+</html>
